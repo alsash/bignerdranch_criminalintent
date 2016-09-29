@@ -1,2 +1,2 @@
-# Criminal Iintent app
+# Criminal Intent. Android app
 bignerdranch training
