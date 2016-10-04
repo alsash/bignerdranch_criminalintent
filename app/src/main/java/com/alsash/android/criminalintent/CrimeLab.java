@@ -34,8 +34,7 @@ public class CrimeLab {
     }
 
     public Crime getCrime(@Nullable UUID id) {
-        for (Crime crime : mCrimes
-                ) {
+        for (Crime crime : mCrimes) {
             if (crime.getId().equals(id)) {
                 return crime;
             }
