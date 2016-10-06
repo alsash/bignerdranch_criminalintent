@@ -1,4 +1,4 @@
-package com.alsash.android.criminalintent;
+package com.alsash.android.criminalintent.data;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

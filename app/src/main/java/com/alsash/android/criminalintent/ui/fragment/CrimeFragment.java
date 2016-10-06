@@ -1,4 +1,4 @@
-package com.alsash.android.criminalintent;
+package com.alsash.android.criminalintent.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+
+import com.alsash.android.criminalintent.R;
+import com.alsash.android.criminalintent.data.Crime;
 
 public class CrimeFragment extends Fragment {
 
