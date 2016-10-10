@@ -6,13 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
@@ -23,8 +22,12 @@ import java.util.List;
 
 public class CrimeListFragment extends Fragment {
 
+    private static final int REQUEST_CRIME = 1;
+    private static final String ARG_CRIME_POSITION = "crime_position";
+
     private RecyclerView mRecyclerView;
     private CrimeAdapter mAdapter;
+    private int mCrimePosition;
 
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -53,8 +56,21 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), CrimeActivity.class);
-            startActivity(intent);
+            mCrimePosition = getAdapterPosition();
+
+            Log.d(CrimeListFragment.class.getCanonicalName(),
+                    "Clicked position = " + mCrimePosition);
+
+            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            startActivityForResult(intent, REQUEST_CRIME);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CRIME) {
+            // implement result processing;
         }
     }
 
@@ -83,8 +99,8 @@ public class CrimeListFragment extends Fragment {
         public int getItemCount() {
             return mCrimes.size();
         }
-    }
 
+    }
 
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -94,15 +110,38 @@ public class CrimeListFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.crime_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        if (savedInstanceState != null) {
+            mCrimePosition = savedInstanceState.getInt(ARG_CRIME_POSITION, 0);
+        }
+
         updateUi();
 
         return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ARG_CRIME_POSITION, mCrimePosition);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUi();
+    }
+
     private void updateUi() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        mAdapter = new CrimeAdapter(crimes);
-        mRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            Log.d(CrimeListFragment.class.getCanonicalName(),
+                    "Updated position = " + mCrimePosition);
+
+            mAdapter.notifyItemChanged(mCrimePosition);
+        }
     }
 }
