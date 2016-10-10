@@ -1,5 +1,6 @@
 package com.alsash.android.criminalintent.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
+import com.alsash.android.criminalintent.ui.activity.CrimeActivity;
 
 import java.util.List;
 
@@ -51,9 +53,8 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getContext(),
-                    mCrime.getTitle() + " clicked!", Toast.LENGTH_SHORT)
-                    .show();
+            Intent intent = new Intent(getActivity(), CrimeActivity.class);
+            startActivity(intent);
         }
     }
 
