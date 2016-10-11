@@ -1,7 +1,5 @@
 package com.alsash.android.criminalintent.ui.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,8 +17,6 @@ import android.widget.EditText;
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
-import com.alsash.android.criminalintent.ui.activity.CrimeActivity;
-import com.alsash.android.criminalintent.ui.activity.CrimeListActivity;
 
 import java.util.UUID;
 

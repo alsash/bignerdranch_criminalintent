@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
-import com.alsash.android.criminalintent.ui.activity.CrimeActivity;
+import com.alsash.android.criminalintent.ui.activity.CrimePagerActivity;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class CrimeListFragment extends Fragment {
             Log.d(CrimeListFragment.class.getCanonicalName(),
                     "Clicked position = " + mCrimePosition);
 
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivityForResult(intent, REQUEST_CRIME);
         }
     }
