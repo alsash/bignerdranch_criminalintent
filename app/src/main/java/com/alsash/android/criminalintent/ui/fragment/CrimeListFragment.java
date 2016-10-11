@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +22,9 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
 
     private static final int REQUEST_CRIME = 1;
-    private static final String ARG_CRIME_POSITION = "crime_position";
 
     private RecyclerView mRecyclerView;
     private CrimeAdapter mAdapter;
-    private int mCrimePosition;
 
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -56,11 +53,6 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            mCrimePosition = getAdapterPosition();
-
-            Log.d(CrimeListFragment.class.getCanonicalName(),
-                    "Clicked position = " + mCrimePosition);
-
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivityForResult(intent, REQUEST_CRIME);
         }
@@ -110,19 +102,9 @@ public class CrimeListFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.crime_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        if (savedInstanceState != null) {
-            mCrimePosition = savedInstanceState.getInt(ARG_CRIME_POSITION, 0);
-        }
-
         updateUi();
 
         return rootView;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(ARG_CRIME_POSITION, mCrimePosition);
     }
 
     @Override
@@ -138,10 +120,7 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            Log.d(CrimeListFragment.class.getCanonicalName(),
-                    "Updated position = " + mCrimePosition);
-
-            mAdapter.notifyItemChanged(mCrimePosition);
+            mAdapter.notifyDataSetChanged();
         }
     }
 }
