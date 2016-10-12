@@ -20,6 +20,7 @@ import android.widget.EditText;
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
+import com.alsash.android.criminalintent.ui.activity.DatePickerActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -86,10 +87,17 @@ public class CrimeFragment extends Fragment {
         mDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-                dialog.show(manager, DIALOG_DATE);
+                if (getResources().getBoolean(R.bool.is_tablet)) {
+                    // Show popup fragment
+                    FragmentManager manager = getFragmentManager();
+                    DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                    dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                    dialog.show(manager, DIALOG_DATE);
+                } else {
+                    // Show fullscreen activity
+                    Intent intent = DatePickerActivity.newIntent(getActivity(), mCrime.getDate());
+                    startActivityForResult(intent, REQUEST_DATE);
+                }
             }
         });
 
@@ -98,15 +106,10 @@ public class CrimeFragment extends Fragment {
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getResources().getBoolean(R.bool.is_tablet)) {
-                    // Show popup fragment
-                    FragmentManager manager = getFragmentManager();
-                    TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
-                    dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
-                    dialog.show(manager, DIALOG_DATE);
-                } else {
-                    // Show fullscreen activity
-                }
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+                dialog.show(manager, DIALOG_DATE);
             }
         });
 

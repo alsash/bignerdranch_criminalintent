@@ -52,6 +52,10 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
+        if (isTablet) return null; // popup dialog is used in tablet mode
+
         View rootView = inflater.inflate(R.layout.dialog_date, container, false);
 
         mDatePicker = (DatePicker) rootView.findViewById(R.id.dialog_date_date_picker);
@@ -75,8 +79,7 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        View rootView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.dialog_date, null);
+        View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date, null);
 
         mDatePicker = (DatePicker) rootView.findViewById(R.id.dialog_date_date_picker);
         initPicker();
