@@ -98,10 +98,15 @@ public class CrimeFragment extends Fragment {
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
-                dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
-                dialog.show(manager, DIALOG_DATE);
+                if (getResources().getBoolean(R.bool.is_tablet)) {
+                    // Show popup fragment
+                    FragmentManager manager = getFragmentManager();
+                    TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
+                    dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+                    dialog.show(manager, DIALOG_DATE);
+                } else {
+                    // Show fullscreen activity
+                }
             }
         });
 
@@ -118,7 +123,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateDate() {
-        mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
+        mDateButton.setText(DateFormat.format("EEE, d MMM yyyy", mCrime.getDate()));
     }
 
     private void updateTime() {
