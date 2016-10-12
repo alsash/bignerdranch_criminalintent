@@ -21,7 +21,9 @@ import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
@@ -29,10 +31,12 @@ public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "dialog_date";
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
+    private Button mTimeButton;
     private CheckBox mSolvedCheckbox;
 
 
@@ -89,6 +93,18 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        mTimeButton = (Button) rootView.findViewById(R.id.crime_time);
+        updateTime();
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                TimePickerFragment dialog = TimePickerFragment.newInstance(mCrime.getDate());
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_TIME);
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
+
         mSolvedCheckbox = (CheckBox) rootView.findViewById(R.id.crime_solved);
         mSolvedCheckbox.setChecked(mCrime.isSolved());
         mSolvedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -105,17 +121,44 @@ public class CrimeFragment extends Fragment {
         mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
     }
 
+    private void updateTime() {
+        mTimeButton.setText(DateFormat.getTimeFormat(getActivity()).format(mCrime.getDate()));
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
 
+        // Save current date and time
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mCrime.getDate());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        // Update date - year, month, day
         if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mCrime.setDate(date);
+            Date newDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            calendar.setTime(newDate);
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+            mCrime.setDate(new GregorianCalendar(year, month, day, hour, minute).getTime());
             updateDate();
         }
 
+        // Update time - hour, minute
+        if (requestCode == REQUEST_TIME) {
+            Date newTime = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+            calendar.setTime(newTime);
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            minute = calendar.get(Calendar.MINUTE);
+            mCrime.setDate(new GregorianCalendar(year, month, day, hour, minute).getTime());
+            updateTime();
+        }
     }
 }
