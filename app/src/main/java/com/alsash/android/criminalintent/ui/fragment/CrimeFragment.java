@@ -131,34 +131,36 @@ public class CrimeFragment extends Fragment {
             return;
         }
 
-        // Save current date and time
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(mCrime.getDate());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
+        if ((requestCode == REQUEST_DATE) || (requestCode == REQUEST_TIME)) {
+            // Save current date and time
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(mCrime.getDate());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
 
-        // Update date - year, month, day
-        if (requestCode == REQUEST_DATE) {
-            Date newDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            calendar.setTime(newDate);
-            year = calendar.get(Calendar.YEAR);
-            month = calendar.get(Calendar.MONTH);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            mCrime.setDate(new GregorianCalendar(year, month, day, hour, minute).getTime());
-            updateDate();
-        }
+            // Update date - year, month, day
+            if (requestCode == REQUEST_DATE) {
+                Date newDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                calendar.setTime(newDate);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                mCrime.setDate(new GregorianCalendar(year, month, day, hour, minute).getTime());
+                updateDate();
+            }
 
-        // Update time - hour, minute
-        if (requestCode == REQUEST_TIME) {
-            Date newTime = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
-            calendar.setTime(newTime);
-            hour = calendar.get(Calendar.HOUR_OF_DAY);
-            minute = calendar.get(Calendar.MINUTE);
-            mCrime.setDate(new GregorianCalendar(year, month, day, hour, minute).getTime());
-            updateTime();
+            // Update time - hour, minute
+            if (requestCode == REQUEST_TIME) {
+                Date newTime = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TIME);
+                calendar.setTime(newTime);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+                mCrime.setDate(new GregorianCalendar(year, month, day, hour, minute).getTime());
+                updateTime();
+            }
         }
     }
 }

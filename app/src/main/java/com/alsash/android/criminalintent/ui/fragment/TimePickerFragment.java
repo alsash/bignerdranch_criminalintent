@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class TimePickerFragment extends DialogFragment {
     private static final String ARG_TIME = "time";
 
     private TimePicker mTimePicker;
+    private Date mDate;
 
     public static TimePickerFragment newInstance(Date date) {
 
@@ -37,14 +39,18 @@ public class TimePickerFragment extends DialogFragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDate = (Date) getArguments().getSerializable(ARG_TIME);
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        Date date = (Date) getArguments().getSerializable(ARG_TIME);
-
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(mDate);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
@@ -75,7 +81,8 @@ public class TimePickerFragment extends DialogFragment {
                             hour = mTimePicker.getCurrentHour();
                             minute = mTimePicker.getCurrentMinute();
                         }
-                        Date newTime = new GregorianCalendar(0, 0, 0, hour, minute).getTime();
+                        Date newTime = new GregorianCalendar(0, 0, 0, hour, minute)
+                                .getTime();
                         sendResult(Activity.RESULT_OK, newTime);
                     }
                 })
