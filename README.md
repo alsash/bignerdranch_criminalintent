@@ -3,4 +3,4 @@
 Bignerdranch training
 
 #### Exercise in Chapter 13
-- Added delete menu button in CrimeFragment
+- Added menu button to delete the Crime that displayed in CrimeFragment
