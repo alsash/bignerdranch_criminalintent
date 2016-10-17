@@ -23,7 +23,6 @@ import android.widget.EditText;
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
-import com.alsash.android.criminalintent.ui.activity.CrimePagerActivity;
 
 import java.util.Date;
 import java.util.UUID;
@@ -54,6 +53,7 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
