@@ -12,15 +12,15 @@ public class CrimeLab {
 
     private List<Crime> mCrimes;
 
+    private CrimeLab(Context context) {
+        mCrimes = new ArrayList<>();
+    }
+
     public static synchronized CrimeLab get(Context context) {
         if (sCrimeLab == null) {
             sCrimeLab = new CrimeLab(context);
         }
         return sCrimeLab;
-    }
-
-    private CrimeLab(Context context) {
-        mCrimes = new ArrayList<>();
     }
 
     public void addCrime(Crime crime) {
