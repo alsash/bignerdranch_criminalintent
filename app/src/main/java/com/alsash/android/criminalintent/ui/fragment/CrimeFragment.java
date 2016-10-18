@@ -45,6 +45,24 @@ public class CrimeFragment extends Fragment {
         return fragment;
     }
 
+    private void updateDate() {
+        mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            mCrime.setDate(date);
+            updateDate();
+        }
+
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,21 +119,9 @@ public class CrimeFragment extends Fragment {
         return rootView;
     }
 
-    private void updateDate() {
-        mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
-    }
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-
-        if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mCrime.setDate(date);
-            updateDate();
-        }
-
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
     }
 }
