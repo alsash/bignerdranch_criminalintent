@@ -2,15 +2,12 @@ package com.alsash.android.criminalintent.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alsash.android.criminalintent.R;
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
-
-    protected abstract Fragment createFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,5 +24,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    protected abstract Fragment createFragment();
 
 }

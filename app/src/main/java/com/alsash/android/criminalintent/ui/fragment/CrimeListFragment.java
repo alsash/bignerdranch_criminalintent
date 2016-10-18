@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -88,10 +89,7 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new_crime:
-                Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
-                startActivity(intent);
+                newCrime();
                 return true;
             case R.id.menu_item_show_subtitle:
                 mIsSubtitleVisible = !mIsSubtitleVisible;
@@ -110,10 +108,16 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setCrimes(crimes);
             mAdapter.notifyDataSetChanged();
         }
         updateSubtitle();
+    }
+
+    private void newCrime() {
+        Crime crime = new Crime();
+        CrimeLab.get(getActivity()).addCrime(crime);
+        Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+        startActivity(intent);
     }
 
     private void updateSubtitle() {
@@ -121,13 +125,35 @@ public class CrimeListFragment extends Fragment {
         int crimeCount = crimeLab.getCrimes().size();
         String subtitle = null;
         if (mIsSubtitleVisible) {
-            subtitle = getString(R.string.subtitle_format, crimeCount);
+            subtitle = getResources()
+                    .getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount);
         }
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
             activity.getSupportActionBar().setSubtitle(subtitle);
+        }
+    }
+
+    private class EmptyHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+
+        private TextView mEmptyListNotification;
+        private Button mEmptyListButton;
+
+        EmptyHolder(View itemView) {
+            super((itemView));
+            mEmptyListNotification = (TextView)
+                    itemView.findViewById(R.id.list_item_empty_notification);
+            mEmptyListButton = (Button)
+                    itemView.findViewById(R.id.list_item_empty_button);
+            mEmptyListButton.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            newCrime();
         }
     }
 
@@ -163,7 +189,9 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+    private class CrimeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int VH_TYPE_EMPTY = 1;
+        private static final int VH_TYPE_CRIME = 2;
 
         private List<Crime> mCrimes;
 
@@ -172,26 +200,43 @@ public class CrimeListFragment extends Fragment {
         }
 
         @Override
-        public CrimeHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.list_item_crime, parent, false);
-            return new CrimeHolder(view);
+            if (viewType == VH_TYPE_CRIME) {
+                View view = layoutInflater.inflate(R.layout.list_item_crime, parent, false);
+                return new CrimeHolder(view);
+            } else {     // VH_TYPE_EMPTY
+                View view = layoutInflater.inflate(R.layout.list_item_empty, parent, false);
+                return new EmptyHolder(view);
+            }
         }
 
         @Override
-        public void onBindViewHolder(CrimeHolder holder, int position) {
-            Crime crime = mCrimes.get(position);
-            holder.bindCrime(crime);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof CrimeHolder) {
+                CrimeHolder crimeHolder = (CrimeHolder) holder;
+                Crime crime = mCrimes.get(position);
+                crimeHolder.bindCrime(crime);
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mCrimes.size() == 0) {
+                return VH_TYPE_EMPTY;
+            } else {
+                return VH_TYPE_CRIME;
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mCrimes.size();
+            if (mCrimes.size() == 0) {
+                return 1;
+            } else {
+                return mCrimes.size();
+            }
         }
-
-        public void setCrimes(List<Crime> crimes) {
-            mCrimes = crimes;
-        }
-
     }
+
 }
