@@ -124,4 +124,5 @@ public class CrimeFragment extends Fragment {
         super.onPause();
         CrimeLab.get(getActivity()).updateCrime(mCrime);
     }
+
 }

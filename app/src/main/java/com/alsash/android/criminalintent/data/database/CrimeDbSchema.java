@@ -11,4 +11,5 @@ public class CrimeDbSchema {
             public static final String SOLVED = "solved";
         }
     }
+
 }

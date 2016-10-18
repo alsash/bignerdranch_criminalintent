@@ -25,4 +25,5 @@ public class CrimeCursorWrapper extends CursorWrapper {
         crime.setSolved(isSolved != 0);
         return crime;
     }
+
 }
