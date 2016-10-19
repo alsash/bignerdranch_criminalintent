@@ -45,10 +45,6 @@ public class CrimeFragment extends Fragment {
         return fragment;
     }
 
-    private void updateDate() {
-        mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) {
@@ -123,5 +119,9 @@ public class CrimeFragment extends Fragment {
     public void onPause() {
         super.onPause();
         CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+    private void updateDate() {
+        mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
     }
 }
