@@ -106,4 +106,13 @@ public class CrimeLab {
             cursor.close();
         }
     }
+
+    public boolean deleteCrime(Crime crime) {
+        int lines = mDatabase.delete(
+                CrimeTable.NAME,
+                CrimeTable.Cols.UUID + " = ?",
+                new String[]{crime.getId().toString()}
+        );
+        return lines != 0;
+    }
 }
