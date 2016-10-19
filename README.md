@@ -2,4 +2,6 @@
 ### Android app
 Bignerdranch training
 
-#### Exercises have been done in separate branches
+#### Exercise in Chapter 13
+- Added menu button to delete the Crime that displayed in the CrimeFragment
+- Added the CrimeListFragment subtitle in singular
