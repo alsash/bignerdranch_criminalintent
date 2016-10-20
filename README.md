@@ -2,4 +2,6 @@
 ### Android app
 Bignerdranch training
 
-#### Exercises have been done in separate branches
+#### Exercise in Chapter 15
+- Made implicit intent with ShareCompat.Intent Builder
+- Added additional implicit intent for making phone call to suspect contact
