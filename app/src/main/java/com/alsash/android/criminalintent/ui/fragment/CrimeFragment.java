@@ -154,7 +154,6 @@ public class CrimeFragment extends Fragment {
                 }
             });
         }
-
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(
                     getString(R.string.crime_report_suspect, mCrime.getSuspect())
