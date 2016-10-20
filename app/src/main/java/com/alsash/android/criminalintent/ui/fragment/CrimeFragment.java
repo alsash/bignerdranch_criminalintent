@@ -138,9 +138,11 @@ public class CrimeFragment extends Fragment {
         });
 
         mSuspectButton = (Button) rootView.findViewById(R.id.crime_suspect_button);
+
         final Intent pickContact = new Intent(Intent.ACTION_PICK,
                 ContactsContract.Contacts.CONTENT_URI);
         PackageManager packageManager = getActivity().getPackageManager();
+
         if (packageManager.resolveActivity(pickContact,
                 PackageManager.MATCH_DEFAULT_ONLY) == null) {
             mSuspectButton.setEnabled(false);
@@ -152,6 +154,7 @@ public class CrimeFragment extends Fragment {
                 }
             });
         }
+
         if (mCrime.getSuspect() != null) {
             mSuspectButton.setText(
                     getString(R.string.crime_report_suspect, mCrime.getSuspect())
