@@ -149,9 +149,9 @@ public class CrimeFragment extends Fragment {
 
         String suspect = mCrime.getSuspect();
         if (suspect == null) {
-            suspect = getString(R.string.crime_report_suspect);
-        } else {
             suspect = getString(R.string.crime_report_no_suspect);
+        } else {
+            suspect = getString(R.string.crime_report_suspect);
         }
 
         String report = getString(R.string.crime_report,
