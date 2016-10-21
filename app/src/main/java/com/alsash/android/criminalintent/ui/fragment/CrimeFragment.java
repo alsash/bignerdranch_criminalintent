@@ -1,12 +1,15 @@
 package com.alsash.android.criminalintent.ui.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.ContactsHelper;
@@ -36,6 +40,7 @@ public class CrimeFragment extends Fragment {
     private static final String DIALOG_DATE = "dialog_date";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
+    private static final int REQUEST_PERMISSION_READ_CONTACTS = 2;
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -80,9 +85,28 @@ public class CrimeFragment extends Fragment {
                     mSuspectButton.setText(
                             getString(R.string.crime_report_suspect, mCrime.getSuspect())
                     );
+                    updateCallSuspectButton(true);
                 }
             } finally {
                 cursor.close();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_PERMISSION_READ_CONTACTS) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                updateCallSuspectButton(true);
+            } else {
+                updateCallSuspectButton(false);
+                Toast.makeText(getActivity(),
+                        R.string.permission_read_contacts_denied,
+                        Toast.LENGTH_SHORT)
+                        .show();
             }
         }
     }
@@ -178,23 +202,21 @@ public class CrimeFragment extends Fragment {
         });
 
         mCallSuspectButton = (Button) rootView.findViewById(R.id.crime_suspect_call_button);
-        if (mCrime.getSuspect() == null) {
-            mCallSuspectButton.setEnabled(false);
-        } else {
-            mCallSuspectButton.setText(getString(R.string.crime_suspect_call_to,
-                    mCrime.getSuspect()));
-            mCallSuspectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String phone = ContactsHelper.get(getActivity())
-                            .getConcactPhoneByName(mCrime.getSuspect());
-                    if (phone != null) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
-                        startActivity(intent);
-                    }
+        boolean isRequested = requestReadContactsPermission();
+        if (!isRequested) {
+            updateCallSuspectButton(true);
+        } // else update was called from onRequestPermissionsResult()
+        mCallSuspectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone = ContactsHelper.get(getActivity())
+                        .getContactPhoneByName(mCrime.getSuspect());
+                if (phone != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                    startActivity(intent);
                 }
-            });
-        }
+            }
+        });
 
         return rootView;
     }
@@ -203,6 +225,19 @@ public class CrimeFragment extends Fragment {
     public void onPause() {
         super.onPause();
         CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+    private void updateCallSuspectButton(boolean enabled) {
+        if (!enabled || mCrime.getSuspect() == null) {
+            mCallSuspectButton.setEnabled(false);
+        } else {
+            mCallSuspectButton.setEnabled(true);
+        }
+
+        if (mCrime.getSuspect() != null) {
+            mCallSuspectButton.setText(getString(R.string.crime_suspect_call_to,
+                    mCrime.getSuspect()));
+        }
     }
 
     private void updateDate() {
@@ -228,5 +263,19 @@ public class CrimeFragment extends Fragment {
                 mCrime.getTitle(), dateString, solvedString, suspect);
 
         return report;
+    }
+
+    private boolean requestReadContactsPermission() {
+        // Check the SDK version and whether the permission is already granted or not.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permission = getActivity().checkSelfPermission(Manifest.permission.READ_CONTACTS);
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                getActivity().requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                        REQUEST_PERMISSION_READ_CONTACTS);
+                // After this point you wait for callback in onRequestPermissionsResult()
+                return true;
+            }
+        }
+        return false;
     }
 }

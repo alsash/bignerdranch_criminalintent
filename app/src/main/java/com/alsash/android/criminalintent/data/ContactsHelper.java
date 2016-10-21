@@ -1,16 +1,27 @@
 package com.alsash.android.criminalintent.data;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 
 public class ContactsHelper {
 
     private Context mContext;
+    private boolean isContactsGranted = true;
 
     ContactsHelper(Context context) {
         mContext = context.getApplicationContext();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (mContext.checkSelfPermission(Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                isContactsGranted = false;
+            }
+        }
     }
 
     public static ContactsHelper get(Context context) {
@@ -18,7 +29,8 @@ public class ContactsHelper {
     }
 
     @Nullable
-    public String getConcactPhoneByName(String contactName) {
+    public String getContactPhoneByName(String contactName) {
+        if (!isContactsGranted) return null;
         return getContactPhoneById(
                 getContactIdByName(contactName)
         );
@@ -26,7 +38,7 @@ public class ContactsHelper {
 
     @Nullable
     public String getContactIdByName(@Nullable String contactName) {
-
+        if (!isContactsGranted) return null;
         if (contactName == null) return null;
 
         String contactId = null;
@@ -51,7 +63,7 @@ public class ContactsHelper {
     }
 
     public String getContactPhoneById(@Nullable String contactId) {
-
+        if (!isContactsGranted) return null;
         if (contactId == null) return null;
 
         String contactPhone = null;

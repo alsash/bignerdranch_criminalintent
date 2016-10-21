@@ -25,4 +25,7 @@
     <string name="send_report">Send report via</string>
     <string name="crime_suspect_call_button">Call to suspect</string>
     <string name="crime_suspect_call_to">Call to %s</string>
+    <string name="permission_read_contacts_denied">
+        Until you grant the permission, you can`t call to suspend from this app"
+    </string>
 </resources>
