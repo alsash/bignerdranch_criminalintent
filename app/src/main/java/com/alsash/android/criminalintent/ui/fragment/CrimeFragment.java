@@ -23,6 +23,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.alsash.android.criminalintent.R;
+import com.alsash.android.criminalintent.data.ContactsHelper;
 import com.alsash.android.criminalintent.data.Crime;
 import com.alsash.android.criminalintent.data.CrimeLab;
 
@@ -166,7 +167,6 @@ public class CrimeFragment extends Fragment {
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")
                         .setText(getCrimeReport())
@@ -181,9 +181,19 @@ public class CrimeFragment extends Fragment {
         if (mCrime.getSuspect() == null) {
             mCallSuspectButton.setEnabled(false);
         } else {
-            mCallSuspectButton.setText(
-                    getString(R.string.crime_suspect_call_to, mCrime.getSuspect())
-            );
+            mCallSuspectButton.setText(getString(R.string.crime_suspect_call_to,
+                    mCrime.getSuspect()));
+            mCallSuspectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String phone = ContactsHelper.get(getActivity())
+                            .getConcactPhoneByName(mCrime.getSuspect());
+                    if (phone != null) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+                        startActivity(intent);
+                    }
+                }
+            });
         }
 
         return rootView;
