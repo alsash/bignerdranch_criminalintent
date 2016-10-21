@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
@@ -41,6 +43,8 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckbox;
     private Button mSuspectButton;
     private Button mReportButton;
+    private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -171,6 +175,9 @@ public class CrimeFragment extends Fragment {
                 startActivity(intent); // implicit intent
             }
         });
+
+        mPhotoButton = (ImageButton) rootView.findViewById(R.id.crime_camera);
+        mPhotoView = (ImageView) rootView.findViewById(R.id.crime_photo);
 
         return rootView;
     }
