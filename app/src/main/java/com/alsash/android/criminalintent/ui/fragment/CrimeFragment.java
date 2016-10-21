@@ -42,7 +42,6 @@ public class CrimeFragment extends Fragment {
     private Button mSuspectButton;
     private Button mReportButton;
 
-
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
