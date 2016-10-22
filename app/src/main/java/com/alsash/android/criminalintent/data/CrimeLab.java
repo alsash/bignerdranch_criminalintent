@@ -110,6 +110,8 @@ public class CrimeLab {
         }
     }
 
+
+    @Nullable
     public File getPhotoFile(Crime crime) {
         File externalFilesDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         if (externalFilesDir == null) {
