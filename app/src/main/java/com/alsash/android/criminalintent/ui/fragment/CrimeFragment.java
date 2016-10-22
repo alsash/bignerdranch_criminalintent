@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
@@ -182,20 +183,22 @@ public class CrimeFragment extends Fragment {
         });
 
         mPhotoButton = (ImageButton) rootView.findViewById(R.id.crime_camera);
-        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        boolean canTakePhoto = mPhotoFile != null &&
-                captureImage.resolveActivity(packageManager) != null;
-        mPhotoButton.setEnabled(canTakePhoto);
-        if (canTakePhoto) {
-            Uri uri = Uri.fromFile(mPhotoFile);
-            captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        }
-        mPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(captureImage, REQUEST_PHOTO);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            boolean canTakePhoto = mPhotoFile != null &&
+                    captureImage.resolveActivity(packageManager) != null;
+            mPhotoButton.setEnabled(canTakePhoto);
+            if (canTakePhoto) {
+                Uri uri = Uri.fromFile(mPhotoFile);
+                captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             }
-        });
+            mPhotoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(captureImage, REQUEST_PHOTO);
+                }
+            });
+        }
 
         mPhotoView = (ImageView) rootView.findViewById(R.id.crime_photo);
 
