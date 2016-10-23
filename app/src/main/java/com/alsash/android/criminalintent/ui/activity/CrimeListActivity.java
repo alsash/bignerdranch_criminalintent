@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.alsash.android.criminalintent.R;
 import com.alsash.android.criminalintent.data.Crime;
+import com.alsash.android.criminalintent.data.CrimeLab;
 import com.alsash.android.criminalintent.ui.fragment.CrimeFragment;
 import com.alsash.android.criminalintent.ui.fragment.CrimeListFragment;
 
@@ -41,5 +42,16 @@ public class CrimeListActivity extends SingleFragmentActivity
         CrimeListFragment crimeListFragment = (CrimeListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         crimeListFragment.updateUi();
+    }
+
+    @Override
+    public void onCrimeDeleted() {
+        onCrimeUpdated(null);
+        Fragment detail = getSupportFragmentManager()
+                .findFragmentById(R.id.detail_fragment_container);
+        if (detail != null) {
+            getSupportFragmentManager().beginTransaction().remove(detail).commit();
+        }
+
     }
 }

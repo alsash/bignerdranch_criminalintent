@@ -191,6 +191,7 @@ public class CrimeListFragment extends Fragment {
                     itemView.findViewById(R.id.list_item_crime_date_text_view);
             mSolvedCheckBox = (CheckBox)
                     itemView.findViewById(R.id.list_item_crime_solved_checkbox);
+            mSolvedCheckBox.setEnabled(false);
             itemView.setOnClickListener(this);
         }
 

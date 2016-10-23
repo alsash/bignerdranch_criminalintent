@@ -67,4 +67,9 @@ public class CrimePagerActivity extends AppCompatActivity
     public void onCrimeUpdated(Crime crime) {
         // Do nothing
     }
+
+    @Override
+    public void onCrimeDeleted() {
+        this.finish();
+    }
 }
