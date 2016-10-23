@@ -1,6 +1,7 @@
 package com.alsash.android.criminalintent.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -55,6 +56,7 @@ public class CrimeFragment extends Fragment {
     private Button mReportButton;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
+    private Callbacks mCallbacks;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -76,6 +78,7 @@ public class CrimeFragment extends Fragment {
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 mCrime.setDate(date);
                 updateDate();
+                updateCrime();
                 break;
             case REQUEST_CONTACT:
                 if (data != null) {
@@ -90,6 +93,7 @@ public class CrimeFragment extends Fragment {
                             cursor.moveToFirst();
                             String suspect = cursor.getString(0);
                             mCrime.setSuspect(suspect);
+                            updateCrime();
                             mSuspectButton.setText(getString(R.string.crime_report_suspect,
                                     mCrime.getSuspect())
                             );
@@ -101,8 +105,15 @@ public class CrimeFragment extends Fragment {
                 break;
             case REQUEST_PHOTO:
                 updatePhotoView();
+                updateCrime();
                 break;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
     }
 
     @Override
@@ -130,6 +141,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                updateCrime();
             }
 
             @Override
@@ -156,6 +168,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                updateCrime();
             }
         });
 
@@ -224,6 +237,17 @@ public class CrimeFragment extends Fragment {
         CrimeLab.get(getActivity()).updateCrime(mCrime);
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    private void updateCrime() {
+        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mCallbacks.onCrimeUpdated(mCrime);
+    }
+
     private void updateDate() {
         mDateButton.setText(DateFormat.format("EEEE, d MMM yyyy", mCrime.getDate()));
     }
@@ -256,5 +280,12 @@ public class CrimeFragment extends Fragment {
             Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getPath(), getActivity());
             mPhotoView.setImageBitmap(bitmap);
         }
+    }
+
+    /**
+     * Obligatory interface for host activities
+     */
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
     }
 }
