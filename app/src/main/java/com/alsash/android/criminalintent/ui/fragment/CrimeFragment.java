@@ -201,7 +201,6 @@ public class CrimeFragment extends Fragment {
         mPhotoButton.setEnabled(canTakePhoto);
 
         if (canTakePhoto) {
-            // Uri uri = Uri.fromFile(mPhotoFile);
             Uri uri = FileProvider.getUriForFile(getActivity(), FILE_PROVIDER_AUTH, mPhotoFile);
             captureImage.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         }
