@@ -35,7 +35,6 @@ public class CrimeListActivity extends SingleFragmentActivity
                     .commit();
         }
     }
-
     @Override
     public void onCrimeUpdated(Crime crime) {
         CrimeListFragment crimeListFragment = (CrimeListFragment)

@@ -13,7 +13,6 @@
         android:layout_weight="1">
 
     </FrameLayout>
-
     <FrameLayout
         android:id="@+id/detail_fragment_container"
         android:layout_width="0dp"

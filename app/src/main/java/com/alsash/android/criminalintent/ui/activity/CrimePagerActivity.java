@@ -62,7 +62,6 @@ public class CrimePagerActivity extends AppCompatActivity
             }
         }
     }
-
     @Override
     public void onCrimeUpdated(Crime crime) {
         // Do nothing
