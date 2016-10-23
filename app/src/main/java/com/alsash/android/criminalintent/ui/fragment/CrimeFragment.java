@@ -191,7 +191,6 @@ public class CrimeFragment extends Fragment {
                 startActivity(intent); // implicit intent
             }
         });
-
         mPhotoButton = (ImageButton) rootView.findViewById(R.id.crime_camera);
 
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
