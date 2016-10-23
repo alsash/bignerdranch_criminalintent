@@ -230,6 +230,7 @@ public class CrimeFragment extends Fragment {
 
         return rootView;
     }
+
     @Override
     public void onPause() {
         super.onPause();

@@ -173,6 +173,7 @@ public class CrimeListFragment extends Fragment {
             newCrime();
         }
     }
+
     private class CrimeHolder extends RecyclerView.ViewHolder
             implements
             View.OnClickListener {
